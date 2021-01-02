@@ -2,7 +2,7 @@ const fs = require("fs");
 const fsPromises = require("fs").promises;
 const path = require("path");
 
-const contactsPath = path.join("./db/contacts.json");
+const contactsPath = path.join(__dirname, "db/contacts.json");
 
 const loadJSONParsedData = async (pathToJSON) => {
   try {
