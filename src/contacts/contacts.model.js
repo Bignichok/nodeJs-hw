@@ -99,6 +99,7 @@ const updateContact = async (contactId, contactParams) => {
             ...contactParams,
         };
 
+        writeParsedData(contactsPath, parsedContacts);
         return parsedContacts[contactIndex];
     } catch (err) {
         throw new Error(err);

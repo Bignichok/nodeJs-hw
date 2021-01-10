@@ -12,34 +12,34 @@ class CrudServer {
     }
 
     start() {
-        this.initServer();
-        this.initMiddleWares();
-        this.initRoutes();
-        this.initErrorHandler();
-        this.startListening();
+        this._initServer();
+        this._initMiddleWares();
+        this._initRoutes();
+        this._initErrorHandler();
+        this._startListening();
     }
 
-    initServer() {
+    _initServer() {
         this.app = express();
     }
 
-    initMiddleWares() {
+    _initMiddleWares() {
         this.app.use(express.json()); // for parsing application/json
         this.app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
     }
 
-    initRoutes() {
+    _initRoutes() {
         this.app.use("/api/contacts", contactsRouter);
     }
 
-    initErrorHandler() {
+    _initErrorHandler() {
         this.app.use((err, req, res, next) => {
             const statusCode = err.status || 500;
             return res.status(statusCode).send(err.message);
         });
     }
 
-    startListening() {
+    _startListening() {
         this.app.listen(process.env.PORT, (err) => {
             if (err) {
                 return console.log(err);
