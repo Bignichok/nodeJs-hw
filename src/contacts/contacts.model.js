@@ -43,15 +43,6 @@ const saveContact = async (contactParams) => {
     try {
         const parsedContacts = await loadJSONParsedData(contactsPath);
 
-        if (
-            parsedContacts.some(
-                ({ name: contactName }) => contactParams.name === contactName
-            )
-        ) {
-            console.log(`\x1B[31m ${contactParams.name} already exist!`);
-            return;
-        }
-
         const nextId = parsedContacts[parsedContacts.length - 1].id + 1;
         const newContact = {
             id: nextId,

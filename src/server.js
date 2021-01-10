@@ -3,10 +3,12 @@ const fs = require("fs");
 const dotenv = require("dotenv");
 const express = require("express");
 const morgan = require("morgan");
+const cors = require("cors");
 
 const contactsRouter = require("./contacts/contacts.router");
 
 dotenv.config({ path: path.join(__dirname, "../.env.local") });
+
 class CrudServer {
     constructor() {
         this.app = null;
@@ -42,6 +44,11 @@ class CrudServer {
                 stream: fs.createWriteStream(path.join(__dirname, "access.log"), {
                     flags: "a",
                 }),
+            })
+        );
+        this.app.use(
+            cors({
+                origin: "http://localhosasdasdt:3000",
             })
         );
     }
