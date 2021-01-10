@@ -1,11 +1,12 @@
 const path = require("path");
+const fs = require("fs");
 const dotenv = require("dotenv");
 const express = require("express");
+const morgan = require("morgan");
 
 const contactsRouter = require("./contacts/contacts.router");
 
 dotenv.config({ path: path.join(__dirname, "../.env.local") });
-
 class CrudServer {
     constructor() {
         this.app = null;
@@ -26,6 +27,23 @@ class CrudServer {
     _initMiddleWares() {
         this.app.use(express.json()); // for parsing application/json
         this.app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+        // log only 4xx and 5xx responses to console
+        this.app.use(
+            morgan("dev", {
+                skip: function (req, res) {
+                    return res.statusCode < 400;
+                },
+            })
+        );
+
+        // log all requests to access.log
+        this.app.use(
+            morgan("common", {
+                stream: fs.createWriteStream(path.join(__dirname, "access.log"), {
+                    flags: "a",
+                }),
+            })
+        );
     }
 
     _initRoutes() {
