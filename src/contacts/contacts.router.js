@@ -1,7 +1,6 @@
 const { Router } = require("express");
 const Joi = require("joi");
 const { validate } = require("../helpers/validate");
-const cors = require("cors");
 
 const {
     getContacts,

@@ -1,4 +1,3 @@
-//imports from model
 const {
     findContacts,
     findContactById,
