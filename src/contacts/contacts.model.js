@@ -1,4 +1,3 @@
-const fs = require("fs");
 const fsPromises = require("fs").promises;
 const path = require("path");
 
@@ -13,11 +12,15 @@ const loadJSONParsedData = async (pathToJSON) => {
     }
 };
 
-const writeParsedData = (pathToJSON, data) => {
-    fs.writeFile(pathToJSON, JSON.stringify(data), (err) => {
-        if (err) throw err;
-        console.log("success write to file!");
-    });
+const writeParsedData = async (pathToJSON, data) => {
+    try {
+        await fsPromises.writeFile(pathToJSON, JSON.stringify(data, null, 2), (err) => {
+            if (err) throw err;
+            console.log("success write to file!");
+        });
+    } catch (e) {
+        throw new Error(e);
+    }
 };
 
 const findContacts = async () => {
@@ -61,14 +64,12 @@ const removeContact = async (contactId) => {
     try {
         const parsedContacts = await loadJSONParsedData(contactsPath);
 
-        if (!parsedContacts.some(({ id }) => id === contactId)) {
+        const restContacts = parsedContacts.filter((contact) => contactId !== contact.id);
+
+        if (parsedContacts.length === restContacts) {
             console.log(`\x1B[31m we have not contact with this ${contactId} id`);
             return;
         }
-
-        const restContacts = parsedContacts.filter((contact) => {
-            return contactId !== contact.id;
-        });
 
         writeParsedData(contactsPath, restContacts);
         console.log(`${contactId} id was deleted`);
