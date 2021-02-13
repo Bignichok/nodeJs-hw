@@ -1,9 +1,12 @@
 const path = require("path");
+const fs = require("fs");
 const express = require("express");
 const dotenv = require("dotenv");
 const morgan = require("morgan");
 const cors = require("cors");
+const mongoose = require("mongoose");
 
+const contactsRouter = require("./contacts/contact.router");
 dotenv.config({ path: path.join(__dirname, "../.env.local") });
 
 class Server {
@@ -11,11 +14,11 @@ class Server {
         this.app = null;
     }
 
-    start() {
+    async start() {
         this._initServer();
         this._initMiddleWares();
         this._initRoutes();
-        this._initDB();
+        await this._initDB();
         this._startListening();
     }
 
@@ -50,10 +53,18 @@ class Server {
     }
 
     _initRoutes() {
-        this.app.use("/contacts", contactsRouter);
+        this.app.use("/api/contacts", contactsRouter);
     }
 
-    _initDB() {}
+    async _initDB() {
+        try {
+            await mongoose.connect(process.env.MONGODB_URL);
+            console.log("Database connection successful");
+        } catch (err) {
+            console.log(err);
+            process.exit(1);
+        }
+    }
 
     _startListening() {
         this.app.listen(process.env.PORT, (err) => {
