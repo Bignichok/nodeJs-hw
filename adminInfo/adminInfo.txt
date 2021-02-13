@@ -1,0 +1,6 @@
+Username - test-admin
+Password - y4JgUX9LfVFxo8OE
+
+connection string 
+mongodb+srv://test-admin:<password>@cluster0.aeozf.mongodb.net/test
+mongodb+srv://test-admin:y4JgUX9LfVFxo8OE@cluster0.aeozf.mongodb.net/test
