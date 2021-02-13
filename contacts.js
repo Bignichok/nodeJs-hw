@@ -13,11 +13,15 @@ const loadJSONParsedData = async (pathToJSON) => {
     }
 };
 
-const writeParsedData = (pathToJSON, data) => {
-    fs.writeFile(pathToJSON, JSON.stringify(data, null, 2), (err) => {
-        if (err) throw err;
-        console.log("success write to file!");
-    });
+const writeParsedData = async (pathToJSON, data) => {
+    try {
+        await fsPromises.writeFile(pathToJSON, JSON.stringify(data, null, 2), (err) => {
+            if (err) throw err;
+            console.log("success write to file!");
+        });
+    } catch (e) {
+        throw new Error(e);
+    }
 };
 
 const listContacts = async () => {

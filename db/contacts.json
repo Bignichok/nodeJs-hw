@@ -12,12 +12,6 @@
     "phone": "(294) 840-6685"
   },
   {
-    "id": 6,
-    "name": "Abbot Franks",
-    "email": "scelerisque@magnis.org",
-    "phone": "(186) 568-3720"
-  },
-  {
     "id": 7,
     "name": "Reuben Henry",
     "email": "pharetra.ut@dictum.co.uk",
@@ -50,6 +44,18 @@
   {
     "id": 12,
     "name": "Mangoasdasd",
+    "email": "mango@gmail.com",
+    "phone": "322-22-22"
+  },
+  {
+    "id": 13,
+    "name": "MAsdo",
+    "email": "mango@gmail.com",
+    "phone": "322-22-22"
+  },
+  {
+    "id": 14,
+    "name": "IVAN88",
     "email": "mango@gmail.com",
     "phone": "322-22-22"
   }
