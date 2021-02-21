@@ -1,7 +1,4 @@
 const Contact = require("./Contact");
-const {
-    Types: { ObjectId },
-} = require("mongoose");
 
 class ContactsController {
     constructor() {}
@@ -96,17 +93,6 @@ class ContactsController {
             next(err);
         }
     }
-
-    validateId(req, res, next) {
-        const { id } = req.params;
-
-        if (!ObjectId.isValid(id)) {
-            return res.status(400).send("Id is not valid");
-        }
-
-        next();
-    }
 }
 
-const contactController = new ContactsController();
-module.exports = contactController;
+module.exports = new ContactsController();
