@@ -1,17 +1,12 @@
 const { Router } = require("express");
 const contactController = require("./contact.controller");
-console.log(contactController);
 const contactRouter = Router();
 
-contactRouter.post(
-    "/",
-    contactController.validateAddContact,
-    contactController.addContact
-);
+contactRouter.post("/", contactController.addContact);
 
 contactRouter.put(
     "/:id",
-    contactController.validateUpdateContact,
+    contactController.validateId,
     contactController.updateContactById
 );
 

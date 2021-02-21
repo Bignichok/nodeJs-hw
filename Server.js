@@ -7,11 +7,14 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 
 const contactsRouter = require("./contacts/contact.router");
-dotenv.config({ path: path.join(__dirname, "../.env.local") });
+
+dotenv.config();
 
 class Server {
     constructor() {
         this.app = null;
+        this.PORT = process.env.PORT || 8080;
+        this.MONGODB_URL = process.env.MONGODB_URL;
     }
 
     async start() {
@@ -47,7 +50,7 @@ class Server {
         );
         this.app.use(
             cors({
-                origin: "http://localhosasdasdt:3000",
+                origin: "http://localhost:3000",
             })
         );
     }
@@ -58,7 +61,10 @@ class Server {
 
     async _initDB() {
         try {
-            await mongoose.connect(process.env.MONGODB_URL);
+            await mongoose.connect(this.MONGODB_URL, {
+                useNewUrlParser: true,
+                useUnifiedTopology: true,
+            });
             console.log("Database connection successful");
         } catch (err) {
             console.log(err);
@@ -72,7 +78,7 @@ class Server {
                 return console.log(err);
             }
 
-            console.log(`Started listening server on ${process.env.PORT}`);
+            console.log(`Started listening server on ${this.PORT}`);
         });
     }
 }
