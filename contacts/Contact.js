@@ -8,6 +8,10 @@ const contactSchema = new Schema({
     subscription: { type: String, required: false },
     password: { type: String, required: false },
     token: { type: String, required: false },
+    owner: {
+        type: SchemaTypes.ObjectId,
+        ref: "user",
+    },
 });
 
 const findContactByIdAndUpdate = async function (contactId, updateParams) {
