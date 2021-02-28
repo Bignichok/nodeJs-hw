@@ -13,6 +13,10 @@ class UsersController {
         return this._loginUser.bind(this);
     }
 
+    get logoutUser() {
+        return this._logoutUser.bind(this);
+    }
+
     async _registerUser(req, res, next) {
         try {
             const {
@@ -38,6 +42,13 @@ class UsersController {
             bcrypt.compare(myPlaintextPassword, hash, function (err, result) {
                 // result == true
             });
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    async _logoutUser(req, res, next) {
+        try {
         } catch (err) {
             next(err);
         }
