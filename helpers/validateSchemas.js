@@ -23,8 +23,15 @@ const registerUserValidateSchema = Joi.object({
     password: Joi.string().required(),
 });
 
+const loginUserValidateSchema = Joi.object({
+    email: Joi.string().email().required(),
+    password: Joi.string().required(),
+    token: Joi.string(),
+});
+
 module.exports = {
     addContactValidateSchema,
     updateContactValidateSchema,
     registerUserValidateSchema,
+    loginUserValidateSchema,
 };

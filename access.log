@@ -45,3 +45,7 @@
 ::1 - - [28/Feb/2021:20:56:11 +0000] "POST /auth/registration HTTP/1.1" 404 157
 ::1 - - [28/Feb/2021:20:56:52 +0000] "POST /auth/register HTTP/1.1" 401 161
 ::1 - - [28/Feb/2021:20:57:16 +0000] "POST /auth/register HTTP/1.1" 401 161
+::1 - - [28/Feb/2021:21:02:22 +0000] "POST /auth/register HTTP/1.1" 400 245
+::1 - - [28/Feb/2021:21:02:51 +0000] "POST /auth/register HTTP/1.1" 400 29
+::1 - - [28/Feb/2021:21:06:07 +0000] "POST /api/contacts HTTP/1.1" 409 37
+::1 - - [28/Feb/2021:21:06:19 +0000] "POST /api/contacts HTTP/1.1" 400 29

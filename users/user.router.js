@@ -1,9 +1,20 @@
 const { Router } = require("express");
-const userController = require("./user.controller");
 const userRouter = Router();
 
-userRouter.post("/register", userController.registerUser);
+const userController = require("./user.controller");
 
-userRouter.post("/login", userController.loginUser);
+const { validate } = require("../helpers/validate.js");
+const {
+    registerUserValidateSchema,
+    loginUserValidateSchema,
+} = require("../helpers/validateSchemas.js");
+
+userRouter.post(
+    "/register",
+    validate(registerUserValidateSchema),
+    userController.registerUser
+);
+
+userRouter.post("/login", validate(loginUserValidateSchema), userController.loginUser);
 
 module.exports = userRouter;
