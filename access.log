@@ -42,3 +42,6 @@
 ::1 - - [21/Feb/2021:18:15:37 +0000] "PUT /api/contacts/5eb074232c30a1378dacdbd HTTP/1.1" 500 612
 ::1 - - [21/Feb/2021:18:16:12 +0000] "PUT /api/contacts/5eb074232c30a1378dacdbd HTTP/1.1" 400 15
 ::1 - - [21/Feb/2021:18:16:22 +0000] "PUT /api/contacts/5eb074232c30a1378dacdbdf HTTP/1.1" 200 166
+::1 - - [28/Feb/2021:20:56:11 +0000] "POST /auth/registration HTTP/1.1" 404 157
+::1 - - [28/Feb/2021:20:56:52 +0000] "POST /auth/register HTTP/1.1" 401 161
+::1 - - [28/Feb/2021:20:57:16 +0000] "POST /auth/register HTTP/1.1" 401 161

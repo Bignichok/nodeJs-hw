@@ -9,7 +9,7 @@ const contactSchema = new Schema({
     password: { type: String, required: false },
     token: { type: String, required: false },
     owner: {
-        type: SchemaTypes.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "user",
     },
 });

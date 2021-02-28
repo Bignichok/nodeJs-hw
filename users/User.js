@@ -12,5 +12,5 @@ const userSchema = new Schema({
     token: String,
 });
 
-const User = mongoose.model("User", contactSchema);
+const User = mongoose.model("User", userSchema);
 module.exports = User;
