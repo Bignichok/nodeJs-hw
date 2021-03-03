@@ -18,18 +18,25 @@ class UsersController {
         return this._logoutUser.bind(this);
     }
 
+    get authorizeUser() {
+        return this._authorizeUser.bind(this);
+    }
+
     async _registerUser(req, res, next) {
         try {
             const {
                 body: { password },
             } = req;
             const hashedPassword = await bcrypt.hash(password, saltRounds);
-            console.log("hashedPassword");
+
             const data = await User.create({
                 ...req.body,
                 password: hashedPassword,
             });
-            res.json(data).status(401);
+            res.json({
+                email: data.email,
+                subscription: data.subscription,
+            }).status(201);
         } catch (err) {
             if (err.code === 11000) {
                 return res.status(400).send("Email is duplicated");
@@ -45,20 +52,19 @@ class UsersController {
             } = req;
 
             const user = await User.findUserByEmail(email);
-            console.log(user, "user");
             const passwordCompareResult = await bcrypt.compare(password, user.password);
             if (!passwordCompareResult) {
                 return res.status(401).send("Authentication error");
             }
-            const token = await jwt.sign(
-                { userId: user._id },
-                process.env.PRIVATE_KEY,
-                { algorithm: "RS256" },
-                function (err, token) {
-                    console.log(token);
-                }
-            );
-            return res.status(200).send("Authentication success");
+            const token = await jwt.sign({ userId: user._id }, process.env.PRIVATE_KEY);
+
+            return res.status(200).send({
+                token: token,
+                user: {
+                    email: user.email,
+                    subscription: user.subscription,
+                },
+            });
         } catch (err) {
             next(err);
         }
@@ -66,6 +72,27 @@ class UsersController {
 
     async _logoutUser(req, res, next) {
         try {
+            console.log("_logoutUser");
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    async _authorizeUser(req, res, next) {
+        try {
+            const authorizationHeader = req.get("Authorization");
+            const token = authorizationHeader?.replace("Bearer ", "");
+            if (!token) {
+                return res.status(401).send({
+                    message: "Not authorized",
+                });
+            }
+
+            const { userId } = await jwt.verify(token, process.env.PRIVATE_KEY);
+
+            const user = await User.findById(userId);
+            req.user = user;
+            next();
         } catch (err) {
             next(err);
         }
