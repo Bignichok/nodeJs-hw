@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const User = require("./user");
+const Contact = require("../contacts/Contact");
 
 const saltRounds = 10;
 class UsersController {
@@ -20,6 +21,14 @@ class UsersController {
 
     get authorizeUser() {
         return this._authorizeUser.bind(this);
+    }
+
+    get getCurrentUser() {
+        return this._getCurrentUser.bind(this);
+    }
+
+    get getUsers() {
+        return this._getUsers.bind(this);
     }
 
     async _registerUser(req, res, next) {
@@ -52,11 +61,20 @@ class UsersController {
             } = req;
 
             const user = await User.findUserByEmail(email);
+
+            if (!user) {
+                return res.status(401).send("Authentication is failed");
+            }
+
             const passwordCompareResult = await bcrypt.compare(password, user.password);
+
             if (!passwordCompareResult) {
                 return res.status(401).send("Authentication error");
             }
+
             const token = await jwt.sign({ userId: user._id }, process.env.PRIVATE_KEY);
+
+            await User.findUserByIdAndUpdate(user._id, { token });
 
             return res.status(200).send({
                 token: token,
@@ -72,7 +90,36 @@ class UsersController {
 
     async _logoutUser(req, res, next) {
         try {
-            console.log("_logoutUser");
+            const userId = req.user._id;
+            if (!userId) {
+                res.status(401).send({
+                    message: "Not authorized",
+                });
+            }
+            await User.findUserByIdAndUpdate(userId, { token: "" });
+
+            res.status(204).send();
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    async _getUsers(req, res, next) {
+        try {
+            const users = await User.find();
+
+            res.status(200).send(users);
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    async _getCurrentUser(req, res, next) {
+        try {
+            if (!req.user) {
+                res.status(404).send({ message: "user is not found" });
+            }
+            res.status(200).send(req.user);
         } catch (err) {
             next(err);
         }
@@ -89,12 +136,14 @@ class UsersController {
             }
 
             const { userId } = await jwt.verify(token, process.env.PRIVATE_KEY);
-
             const user = await User.findById(userId);
+
             req.user = user;
             next();
         } catch (err) {
-            next(err);
+            return res.status(403).send({
+                message: err.message,
+            });
         }
     }
 }

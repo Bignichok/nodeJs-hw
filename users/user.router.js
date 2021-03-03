@@ -10,13 +10,25 @@ const {
 } = require("../helpers/validateSchemas.js");
 
 userRouter.post(
-    "/register",
+    "/auth/register",
     validate(registerUserValidateSchema),
     userController.registerUser
 );
 
-userRouter.post("/login", validate(loginUserValidateSchema), userController.loginUser);
+userRouter.post(
+    "/auth/login",
+    validate(loginUserValidateSchema),
+    userController.loginUser
+);
 
-userRouter.post("/logout", userController.authorizeUser, userController.logoutUser);
+userRouter.post("/auth/logout", userController.authorizeUser, userController.logoutUser);
+
+userRouter.get(
+    "/users/current",
+    userController.authorizeUser,
+    userController.getCurrentUser
+);
+
+userRouter.get("/users", userController.getUsers);
 
 module.exports = userRouter;

@@ -1,16 +1,18 @@
 const mongoose = require("mongoose");
-const { Schema } = mongoose;
+const mongoosePaginate = require("mongoose-paginate-v2");
+
+const {
+    Schema,
+    Types: { ObjectId },
+} = mongoose;
 
 const contactSchema = new Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     phone: { type: String, required: true, unique: true },
-    subscription: { type: String, required: false },
-    password: { type: String, required: false },
-    token: { type: String, required: false },
     owner: {
-        type: Schema.Types.ObjectId,
-        ref: "user",
+        type: ObjectId,
+        ref: "User",
     },
 });
 
@@ -35,5 +37,15 @@ contactSchema.statics.findContactByEmail = findContactByEmail;
 contactSchema.statics.findContactByName = findContactByName;
 contactSchema.statics.findContactByPhone = findContactByPhone;
 
+contactSchema.plugin(mongoosePaginate);
+
 const Contact = mongoose.model("Contact", contactSchema);
+
+const options = {
+    page: 1,
+    limit: 20,
+};
+
+Contact.paginate({}, options);
+
 module.exports = Contact;

@@ -7,20 +7,28 @@ const userSchema = new Schema({
         unique: true,
         required: [true, "Please enter Email Address"],
     },
-    password: String,
+    password: {
+        type: String,
+        required: true,
+    },
     subscription: {
         type: String,
         enum: ["free", "pro", "premium"],
         default: "free",
     },
-    token: String,
+    token: { type: String, default: "" },
 });
 
 const findUserByEmail = async function (email) {
     return this.findOne({ email });
 };
 
+const findUserByIdAndUpdate = async function (userId, updateParams) {
+    return this.findByIdAndUpdate(userId, { $set: updateParams }, { new: true });
+};
+
 userSchema.statics.findUserByEmail = findUserByEmail;
+userSchema.statics.findUserByIdAndUpdate = findUserByIdAndUpdate;
 
 const User = mongoose.model("User", userSchema);
 module.exports = User;
