@@ -15,8 +15,8 @@ userRouter.post(
     userController.registerUser
 );
 
-userRouter.post("/logout", userController.logoutUser);
-
 userRouter.post("/login", validate(loginUserValidateSchema), userController.loginUser);
+
+userRouter.post("/logout", userController.logoutUser);
 
 module.exports = userRouter;

@@ -2,7 +2,11 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
-    email: String,
+    email: {
+        type: String,
+        unique: true,
+        required: [true, "Please enter Email Address"],
+    },
     password: String,
     subscription: {
         type: String,
@@ -11,6 +15,12 @@ const userSchema = new Schema({
     },
     token: String,
 });
+
+const findUserByEmail = async function (email) {
+    return this.findOne({ email });
+};
+
+userSchema.statics.findUserByEmail = findUserByEmail;
 
 const User = mongoose.model("User", userSchema);
 module.exports = User;

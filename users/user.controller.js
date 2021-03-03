@@ -1,4 +1,5 @@
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const User = require("./user");
 
@@ -39,9 +40,25 @@ class UsersController {
 
     async _loginUser(req, res, next) {
         try {
-            bcrypt.compare(myPlaintextPassword, hash, function (err, result) {
-                // result == true
-            });
+            const {
+                body: { email, password },
+            } = req;
+
+            const user = await User.findUserByEmail(email);
+            console.log(user, "user");
+            const passwordCompareResult = await bcrypt.compare(password, user.password);
+            if (!passwordCompareResult) {
+                return res.status(401).send("Authentication error");
+            }
+            const token = await jwt.sign(
+                { userId: user._id },
+                process.env.PRIVATE_KEY,
+                { algorithm: "RS256" },
+                function (err, token) {
+                    console.log(token);
+                }
+            );
+            return res.status(200).send("Authentication success");
         } catch (err) {
             next(err);
         }
