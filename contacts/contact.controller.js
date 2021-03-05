@@ -1,4 +1,7 @@
 const Contact = require("./Contact");
+const {
+    Types: { ObjectId },
+} = require("mongoose");
 
 class ContactsController {
     constructor() {}

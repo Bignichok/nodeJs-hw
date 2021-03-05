@@ -8,8 +8,8 @@ const {
 
 const contactSchema = new Schema({
     name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    phone: { type: String, required: true, unique: true },
+    email: { type: String, required: true },
+    phone: { type: String, required: true },
     owner: {
         type: ObjectId,
         ref: "user",
@@ -17,7 +17,7 @@ const contactSchema = new Schema({
 });
 
 const findContactByIdAndUpdate = async function (contactId, updateParams, userId) {
-    return this.findByIdAndUpdate(
+    return this.findOneAndUpdate(
         { _id: contactId, owner: userId },
         { $set: updateParams },
         { new: true }
