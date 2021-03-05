@@ -8,6 +8,7 @@ const {
     registerUserValidateSchema,
     loginUserValidateSchema,
 } = require("../helpers/validateSchemas.js");
+const authorizeUser = require("../helpers/authorizeUser.js");
 
 userRouter.post(
     "/auth/register",
@@ -21,13 +22,9 @@ userRouter.post(
     userController.loginUser
 );
 
-userRouter.post("/auth/logout", userController.authorizeUser, userController.logoutUser);
+userRouter.post("/auth/logout", authorizeUser, userController.logoutUser);
 
-userRouter.get(
-    "/users/current",
-    userController.authorizeUser,
-    userController.getCurrentUser
-);
+userRouter.get("/users/current", authorizeUser, userController.getCurrentUser);
 
 userRouter.get("/users", userController.getUsers);
 

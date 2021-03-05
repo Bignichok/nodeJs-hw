@@ -16,7 +16,7 @@ const userSchema = new Schema({
         enum: ["free", "pro", "premium"],
         default: "free",
     },
-    token: { type: String, default: "" },
+    token: { type: String, default: null },
 });
 
 const findUserByEmail = async function (email) {
@@ -30,5 +30,5 @@ const findUserByIdAndUpdate = async function (userId, updateParams) {
 userSchema.statics.findUserByEmail = findUserByEmail;
 userSchema.statics.findUserByIdAndUpdate = findUserByIdAndUpdate;
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model("user", userSchema);
 module.exports = User;

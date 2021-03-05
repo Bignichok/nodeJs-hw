@@ -1,8 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const User = require("./user");
-const Contact = require("../contacts/Contact");
+const User = require("./User");
 
 const saltRounds = 10;
 class UsersController {
@@ -17,10 +16,6 @@ class UsersController {
 
     get logoutUser() {
         return this._logoutUser.bind(this);
-    }
-
-    get authorizeUser() {
-        return this._authorizeUser.bind(this);
     }
 
     get getCurrentUser() {
@@ -91,12 +86,7 @@ class UsersController {
     async _logoutUser(req, res, next) {
         try {
             const userId = req.user._id;
-            if (!userId) {
-                res.status(401).send({
-                    message: "Not authorized",
-                });
-            }
-            await User.findUserByIdAndUpdate(userId, { token: "" });
+            await User.findUserByIdAndUpdate(userId, { token: null });
 
             res.status(204).send();
         } catch (err) {
@@ -122,28 +112,6 @@ class UsersController {
             res.status(200).send(req.user);
         } catch (err) {
             next(err);
-        }
-    }
-
-    async _authorizeUser(req, res, next) {
-        try {
-            const authorizationHeader = req.get("Authorization");
-            const token = authorizationHeader?.replace("Bearer ", "");
-            if (!token) {
-                return res.status(401).send({
-                    message: "Not authorized",
-                });
-            }
-
-            const { userId } = await jwt.verify(token, process.env.PRIVATE_KEY);
-            const user = await User.findById(userId);
-
-            req.user = user;
-            next();
-        } catch (err) {
-            return res.status(403).send({
-                message: err.message,
-            });
         }
     }
 }

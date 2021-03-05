@@ -7,22 +7,35 @@ const {
     addContactValidateSchema,
     updateContactValidateSchema,
 } = require("../helpers/validateSchemas.js");
+const authorizeUser = require("../helpers/authorizeUser.js");
 
-contactRouter.post("/", validate(addContactValidateSchema), contactController.addContact);
+contactRouter.post(
+    "/",
+    authorizeUser,
+    validate(addContactValidateSchema),
+    contactController.addContact
+);
 
 contactRouter.put(
     "/:id",
+    authorizeUser,
     validate(updateContactValidateSchema),
     contactController.validateId,
     contactController.updateContactById
 );
 
-contactRouter.get("/", contactController.getContacts);
+contactRouter.get("/", authorizeUser, contactController.getContacts);
 
-contactRouter.get("/:id", contactController.validateId, contactController.getContactById);
+contactRouter.get(
+    "/:id",
+    authorizeUser,
+    contactController.validateId,
+    contactController.getContactById
+);
 
 contactRouter.delete(
     "/:id",
+    authorizeUser,
     contactController.validateId,
     contactController.deleteContactById
 );

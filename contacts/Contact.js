@@ -12,16 +12,20 @@ const contactSchema = new Schema({
     phone: { type: String, required: true, unique: true },
     owner: {
         type: ObjectId,
-        ref: "User",
+        ref: "user",
     },
 });
 
-const findContactByIdAndUpdate = async function (contactId, updateParams) {
-    return this.findByIdAndUpdate(contactId, { $set: updateParams }, { new: true });
+const findContactByIdAndUpdate = async function (contactId, updateParams, userId) {
+    return this.findByIdAndUpdate(
+        { _id: contactId, owner: userId },
+        { $set: updateParams },
+        { new: true }
+    );
 };
 
-const findContactByEmail = async function (email) {
-    return this.findOne({ email });
+const findContactByEmail = async function (email, userId) {
+    return this.findOne({ email, owner: userId });
 };
 
 const findContactByName = async function (name) {
@@ -39,7 +43,7 @@ contactSchema.statics.findContactByPhone = findContactByPhone;
 
 contactSchema.plugin(mongoosePaginate);
 
-const Contact = mongoose.model("Contact", contactSchema);
+const Contact = mongoose.model("contact", contactSchema);
 
 const options = {
     page: 1,

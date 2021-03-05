@@ -27,14 +27,15 @@ class ContactsController {
 
     async _addContact(req, res, next) {
         try {
+            const userId = req.user._id;
             const data = req.body;
-            const existingContact = await Contact.findContactByEmail(data.email);
+            const existingContact = await Contact.findContactByEmail(data.email, userId);
 
             if (existingContact) {
                 return res.status(409).send("Contact with this email already exist");
             }
 
-            await Contact.create(data);
+            await Contact.create({ ...data, owner: userId });
 
             return res.status(201).json(data);
         } catch (err) {
@@ -44,7 +45,11 @@ class ContactsController {
 
     async _getContacts(req, res, next) {
         try {
-            const contacts = await Contact.find();
+            const userId = req.user._id;
+            const contacts = await Contact.find({ owner: userId }).populate({
+                path: "owner",
+                select: "email",
+            });
 
             return res.status(200).json(contacts);
         } catch (err) {
@@ -54,8 +59,12 @@ class ContactsController {
 
     async _getContactById(req, res, next) {
         try {
+            const userId = req.user._id;
             const { id } = req.params;
-            const contact = await Contact.findById(id);
+            const contact = await Contact.findOne({ _id: id, owner: userId }).populate({
+                path: "owner",
+                select: "email",
+            });
 
             if (!contact) {
                 return res.status(404).send("contact was not found");
@@ -69,9 +78,14 @@ class ContactsController {
 
     async _updateContactById(req, res, next) {
         try {
+            const userId = req.user._id;
             const { id } = req.params;
 
-            const updatedContact = await Contact.findContactByIdAndUpdate(id, req.body);
+            const updatedContact = await Contact.findContactByIdAndUpdate(
+                id,
+                req.body,
+                userId
+            );
             if (!updatedContact) {
                 return res.status(404).send("contact was not found");
             }
@@ -84,8 +98,9 @@ class ContactsController {
 
     async _deleteContactById(req, res, next) {
         try {
+            const userId = req.user._id;
             const { id } = req.params;
-            const { deletedCount } = await Contact.deleteOne({ _id: id });
+            const { deletedCount } = await Contact.deleteOne({ _id: id, userId });
 
             if (!deletedCount) {
                 return res.status(404).send("contact was not found");
