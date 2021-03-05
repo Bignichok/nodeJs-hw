@@ -1,11 +1,6 @@
 const { Router } = require("express");
-const contactController = require("./contact.controller");
-const { validate, validateId } = require("../helpers/validate");
-const {
-    addContactValidateSchema,
-    updateContactValidateSchema,
-} = require("../helpers/validateSchemas");
 
+const contactController = require("./contact.controller");
 const contactRouter = Router();
 
 const { validate } = require("../helpers/validate.js");

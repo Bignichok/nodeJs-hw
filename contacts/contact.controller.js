@@ -108,6 +108,16 @@ class ContactsController {
             next(err);
         }
     }
+
+    validateId(req, res, next) {
+        const { id } = req.params;
+
+        if (!ObjectId.isValid(id)) {
+            return res.status(400).send("Id is not valid");
+        }
+
+        next();
+    }
 }
 
 module.exports = new ContactsController();
