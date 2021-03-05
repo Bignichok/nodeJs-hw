@@ -46,10 +46,15 @@ class ContactsController {
     async _getContacts(req, res, next) {
         try {
             const userId = req.user._id;
-            const contacts = await Contact.find({ owner: userId }).populate({
-                path: "owner",
-                select: "email",
-            });
+            const contacts = await Contact.paginate(
+                { owner: userId },
+                {
+                    populate: {
+                        path: "owner",
+                        select: "email",
+                    },
+                }
+            );
 
             return res.status(200).json(contacts);
         } catch (err) {

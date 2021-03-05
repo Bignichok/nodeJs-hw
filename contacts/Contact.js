@@ -45,11 +45,6 @@ contactSchema.plugin(mongoosePaginate);
 
 const Contact = mongoose.model("contact", contactSchema);
 
-const options = {
-    page: 1,
-    limit: 20,
-};
-
-Contact.paginate({}, options);
+Contact.paginate({});
 
 module.exports = Contact;
