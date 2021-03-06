@@ -1,26 +1,44 @@
 const { Router } = require("express");
+
 const contactController = require("./contact.controller");
-const { validate, validateId } = require("../helpers/validate");
+const contactRouter = Router();
+
+const { validate } = require("../helpers/validate.js");
 const {
     addContactValidateSchema,
     updateContactValidateSchema,
-} = require("../helpers/validateSchemas");
+} = require("../helpers/validateSchemas.js");
+const authorizeUser = require("../helpers/authorizeUser.js");
 
-const contactRouter = Router();
-
-contactRouter.post("/", validate(addContactValidateSchema), contactController.addContact);
+contactRouter.post(
+    "/",
+    authorizeUser,
+    validate(addContactValidateSchema),
+    contactController.addContact
+);
 
 contactRouter.put(
     "/:id",
+    authorizeUser,
     validate(updateContactValidateSchema),
-    validateId,
+    contactController.validateId,
     contactController.updateContactById
 );
 
-contactRouter.get("/", contactController.getContacts);
+contactRouter.get("/", authorizeUser, contactController.getContacts);
 
-contactRouter.get("/:id", validateId, contactController.getContactById);
+contactRouter.get(
+    "/:id",
+    authorizeUser,
+    contactController.validateId,
+    contactController.getContactById
+);
 
-contactRouter.delete("/:id", validateId, contactController.deleteContactById);
+contactRouter.delete(
+    "/:id",
+    authorizeUser,
+    contactController.validateId,
+    contactController.deleteContactById
+);
 
 module.exports = contactRouter;

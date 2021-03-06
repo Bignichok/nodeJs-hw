@@ -7,6 +7,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 
 const contactsRouter = require("./contacts/contact.router");
+const userRouter = require("./users/user.router");
 
 dotenv.config();
 
@@ -57,6 +58,7 @@ class Server {
 
     _initRoutes() {
         this.app.use("/api/contacts", contactsRouter);
+        this.app.use(userRouter);
     }
 
     async _initDB() {

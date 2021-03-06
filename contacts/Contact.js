@@ -1,21 +1,31 @@
 const mongoose = require("mongoose");
-const { Schema } = mongoose;
+const mongoosePaginate = require("mongoose-paginate-v2");
+
+const {
+    Schema,
+    Types: { ObjectId },
+} = mongoose;
 
 const contactSchema = new Schema({
     name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    phone: { type: String, required: true, unique: true },
-    subscription: { type: String, required: false },
-    password: { type: String, required: false },
-    token: { type: String, required: false },
+    email: { type: String, required: true },
+    phone: { type: String, required: true },
+    owner: {
+        type: ObjectId,
+        ref: "user",
+    },
 });
 
-const findContactByIdAndUpdate = async function (contactId, updateParams) {
-    return this.findByIdAndUpdate(contactId, { $set: updateParams }, { new: true });
+const findContactByIdAndUpdate = async function (contactId, updateParams, userId) {
+    return this.findOneAndUpdate(
+        { _id: contactId, owner: userId },
+        { $set: updateParams },
+        { new: true }
+    );
 };
 
-const findContactByEmail = async function (email) {
-    return this.findOne({ email });
+const findContactByEmail = async function (email, userId) {
+    return this.findOne({ email, owner: userId });
 };
 
 const findContactByName = async function (name) {
@@ -31,5 +41,10 @@ contactSchema.statics.findContactByEmail = findContactByEmail;
 contactSchema.statics.findContactByName = findContactByName;
 contactSchema.statics.findContactByPhone = findContactByPhone;
 
-const Contact = mongoose.model("Contact", contactSchema);
+contactSchema.plugin(mongoosePaginate);
+
+const Contact = mongoose.model("contact", contactSchema);
+
+Contact.paginate({});
+
 module.exports = Contact;
