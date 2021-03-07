@@ -58,7 +58,7 @@ class Server {
 
     _initRoutes() {
         this.app.use("/api/contacts", contactsRouter);
-        this.app.use(userRouter);
+        this.app.use("/", userRouter);
     }
 
     async _initDB() {
