@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const gravatar = require("gravatar");
+
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
@@ -10,6 +12,12 @@ const userSchema = new Schema({
     password: {
         type: String,
         required: true,
+    },
+    avatarURL: {
+        type: String,
+        default: function () {
+            return gravatar.url(this.email, { s: "250", r: "x", d: "retro" }, true);
+        },
     },
     subscription: {
         type: String,

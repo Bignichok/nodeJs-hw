@@ -9,6 +9,7 @@ const {
     loginUserValidateSchema,
 } = require("../helpers/validateSchemas.js");
 const authorizeUser = require("../helpers/authorizeUser.js");
+const upload = require("../helpers/uploadAvatars");
 
 userRouter.post(
     "/auth/register",
@@ -27,5 +28,12 @@ userRouter.post("/auth/logout", authorizeUser, userController.logoutUser);
 userRouter.get("/users/current", authorizeUser, userController.getCurrentUser);
 
 userRouter.get("/users", userController.getUsers);
+
+userRouter.patch(
+    "/users/avatars",
+    authorizeUser,
+    upload.single("avatar"),
+    userController.updateUser
+);
 
 module.exports = userRouter;
