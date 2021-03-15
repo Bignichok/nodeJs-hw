@@ -9,6 +9,10 @@ const mongoose = require("mongoose");
 const contactsRouter = require("./contacts/contact.router");
 const userRouter = require("./users/user.router");
 
+const createNewFolder = require("./helpers/createNewFolder");
+
+const { UPLOAD_DIR, IMG_DIR } = require("./constants");
+
 dotenv.config();
 
 class Server {
@@ -54,11 +58,14 @@ class Server {
                 origin: "http://localhost:3000",
             })
         );
+
+        this.app.use("/images", express.static(IMG_DIR));
+        this.app.use(express.static(path.join(__dirname, "public")));
     }
 
     _initRoutes() {
         this.app.use("/api/contacts", contactsRouter);
-        this.app.use(userRouter);
+        this.app.use("/", userRouter);
     }
 
     async _initDB() {
@@ -75,12 +82,18 @@ class Server {
     }
 
     _startListening() {
-        this.app.listen(process.env.PORT, (err) => {
-            if (err) {
-                return console.log(err);
-            }
+        this.app.listen(process.env.PORT, async (err) => {
+            try {
+                if (err) {
+                    return console.log(err);
+                }
+                createNewFolder(UPLOAD_DIR);
+                createNewFolder(IMG_DIR);
 
-            console.log(`Started listening server on ${this.PORT}`);
+                console.log(`Started listening server on ${this.PORT}`);
+            } catch (err) {
+                console.log(err);
+            }
         });
     }
 }
