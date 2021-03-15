@@ -30,7 +30,7 @@ class Server {
         this._startListening();
     }
 
-    async _initServer() {
+    _initServer() {
         this.app = express();
     }
 
