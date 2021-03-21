@@ -25,6 +25,8 @@ userRouter.post(
 
 userRouter.post("/auth/logout", authorizeUser, userController.logoutUser);
 
+userRouter.get("/auth/verify/:verificationToken", userController.verifyUser);
+
 userRouter.get("/users/current", authorizeUser, userController.getCurrentUser);
 
 userRouter.get("/users", userController.getUsers);

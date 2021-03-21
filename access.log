@@ -335,3 +335,9 @@
 ::1 - - [08/Mar/2021:14:51:04 +0000] "PATCH /users/avatars HTTP/1.1" 200 57
 ::1 - - [08/Mar/2021:14:51:06 +0000] "GET /images/Untitled.png HTTP/1.1" 200 19494
 ::1 - - [08/Mar/2021:14:53:32 +0000] "PATCH /users/avatars HTTP/1.1" 200 57
+::1 - - [21/Mar/2021:11:03:16 +0000] "POST /auth/register HTTP/1.1" 500 473
+::1 - - [21/Mar/2021:11:06:10 +0000] "GET /users HTTP/1.1" 200 1501
+::1 - - [21/Mar/2021:11:06:21 +0000] "POST /auth/register HTTP/1.1" 201 149
+::1 - - [21/Mar/2021:11:07:31 +0000] "GET /auth/verify/UDYRlTCiXGz4imJqZxi2G HTTP/1.1" 200 -
+::1 - - [21/Mar/2021:11:07:31 +0000] "GET /favicon.ico HTTP/1.1" 404 150
+::1 - - [21/Mar/2021:11:11:25 +0000] "GET /auth/verify/UDYRlTCiXGz4imJqZxi2G HTTP/1.1" 404 31
