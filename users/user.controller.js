@@ -3,10 +3,12 @@ const jwt = require("jsonwebtoken");
 const Jimp = require("jimp");
 const path = require("path");
 const fs = require("fs").promises;
+const { nanoid } = require("nanoid");
 
 const User = require("./User");
 
 const { IMG_DIR } = require("../constants");
+const emailService = require("../services/EmailService");
 
 const saltRounds = 10;
 class UsersController {
@@ -21,6 +23,10 @@ class UsersController {
 
     get logoutUser() {
         return this._logoutUser.bind(this);
+    }
+
+    get verifyUser() {
+        return this._verifyUser.bind(this);
     }
 
     get getCurrentUser() {
@@ -38,13 +44,17 @@ class UsersController {
     async _registerUser(req, res, next) {
         try {
             const {
-                body: { password },
+                body: { password, email, name },
             } = req;
             const hashedPassword = await bcrypt.hash(password, saltRounds);
+            const verificationToken = nanoid();
+
+            await emailService.sendEmail(verificationToken, email, name);
 
             const data = await User.create({
                 ...req.body,
                 password: hashedPassword,
+                verificationToken,
             });
 
             res.json({
@@ -100,6 +110,21 @@ class UsersController {
             await User.findUserByIdAndUpdate(userId, { token: null });
 
             res.status(204).send();
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    async _verifyUser(req, res, next) {
+        try {
+            const user = await User.findUserByVerificationToken(
+                req.params.verificationToken
+            );
+            if (!user) {
+                return res.status(404).send({ message: "user is not found" });
+            }
+            await User.findUserByIdAndUpdate(user.id, { verificationToken: null });
+            return res.status(200).send({ message: "verification completed" });
         } catch (err) {
             next(err);
         }

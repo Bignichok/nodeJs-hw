@@ -25,6 +25,10 @@ const userSchema = new Schema({
         default: "free",
     },
     token: { type: String, default: null },
+    verificationToken: {
+        type: String,
+        required: [true, "Verify token is required"],
+    },
 });
 
 const findUserByEmail = async function (email) {
@@ -35,8 +39,13 @@ const findUserByIdAndUpdate = async function (userId, updateParams) {
     return this.findByIdAndUpdate(userId, { $set: updateParams }, { new: true });
 };
 
+const findUserByVerificationToken = async function (verificationToken) {
+    return this.findOne({ verificationToken });
+};
+
 userSchema.statics.findUserByEmail = findUserByEmail;
 userSchema.statics.findUserByIdAndUpdate = findUserByIdAndUpdate;
+userSchema.statics.findUserByVerificationToken = findUserByVerificationToken;
 
 const User = mongoose.model("user", userSchema);
 module.exports = User;
